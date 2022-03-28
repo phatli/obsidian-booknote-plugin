@@ -37,7 +37,7 @@ import {
 import SearchBookModal from "./SearchBookModal";
 import {SUPPORT_BOOK_TYPES} from "./constants"
 import {BookAttribute,AbstractBook} from "./types"
-
+import * as Path from 'path';
 
 
 
@@ -338,12 +338,25 @@ export default class BookNotePlugin extends Plugin {
 	}
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		this.settings.bookPath = this.decode2Absolute(this.settings.bookPath);
 	}
 
 	async saveSettings() {
+		this.settings.bookPath = this.encode2Relative(this.settings.bookPath);
+		console.log(`hello ${this.settings.bookPath}`)
 		await this.saveData(this.settings);
 	}
-
+    decode2Absolute(path: string) {
+      const basePath = (this.app.vault.adapter as any).basePath;
+      path = Path.join(basePath, path);
+      return path
+    }
+    encode2Relative(path: string) {
+      const basePath = (this.app.vault.adapter as any).basePath;
+      path = path.replace(basePath+'\\', "");
+      console.log(path);
+      return path
+    }
 	startStaticServer() {
 		this.localWebViewerServer = staticServer(this.settings.webviewerRootPath,this.settings.webviewerLocalPort,this);
 		this.localWebViewerServer.listen();
@@ -1173,12 +1186,13 @@ class BookNoteSettingTab extends PluginSettingTab {
 		containerEl.createEl("h2", { text: "BookNote" });
 
 		new Setting(containerEl)
-			.setName("主书库根路径")
-			.setDesc("使用绝对路径，可以使用库外的目录")
+			.setName("主书库相对路径")
+			.setDesc("使用相对路径，使用库内的目录")
 			.addText((text) =>
-				text.setValue(this.plugin.settings.bookPath).onChange(async (value) => {
+				text.setValue(this.plugin.encode2Relative(this.plugin.settings.bookPath)).onChange(async (value) => {
 					this.plugin.settings.bookPath = value;
 					await this.plugin.saveSettings();
+					this.plugin.settings.bookPath = this.plugin.encode2Relative(this.plugin.settings.bookPath)
 				})
 			);
 
