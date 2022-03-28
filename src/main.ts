@@ -339,11 +339,12 @@ export default class BookNotePlugin extends Plugin {
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 		this.settings.bookPath = this.decode2Absolute(this.settings.bookPath);
+		this.settings.webviewerRootPath = this.decode2Absolute(this.settings.webviewerRootPath);
 	}
 
 	async saveSettings() {
 		this.settings.bookPath = this.encode2Relative(this.settings.bookPath);
-		console.log(`hello ${this.settings.bookPath}`)
+		this.settings.webviewerRootPath = this.encode2Relative(this.settings.webviewerRootPath);
 		await this.saveData(this.settings);
 	}
     decode2Absolute(path: string) {
@@ -1236,11 +1237,12 @@ class BookNoteSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("WebViewer库路径")
-			.setDesc("使用本地服务器时有效，使用绝对路径")
+			.setDesc("使用本地服务器时有效，使用相对路径")
 			.addText((text) =>
-				text.setValue(this.plugin.settings.webviewerRootPath).onChange(async (value) => {
+				text.setValue(this.plugin.encode2Relative(this.plugin.settings.webviewerRootPath)).onChange(async (value) => {
 					this.plugin.settings.webviewerRootPath = value;
 					await this.plugin.saveSettings();
+					this.plugin.settings.webviewerRootPath = this.plugin.encode2Relative(this.plugin.settings.webviewerRootPath)
 					// TODO: value check and is server started?
 					if (this.plugin.settings.useLocalWebViewerServer) {
 						this.plugin.stopStaticServer();

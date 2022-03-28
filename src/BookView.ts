@@ -420,12 +420,6 @@ export class BookView extends ItemView {
 		});
 		actionsContainer.insertBefore(actionTemp,autoInsertEl);
 
-		actionsContainer.insertBefore(actionTemp,this.addAction("dice","占位",()=> {
-			new Notice("广告位出租");
-		}));
-		actionsContainer.insertBefore(actionTemp,this.addAction("star","占位",()=> {
-			new Notice("广告位出租");
-		}));
 
 
 
