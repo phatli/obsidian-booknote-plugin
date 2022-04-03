@@ -78,12 +78,6 @@ export class BookProjectView extends ItemView {
 		this.navHeader.addAction("reset","更新",(evt) => {
 			self.plugin.updateBookProject();
 		})
-		this.navHeader.addAction("document","占位",(evt) => {
-			console.log(evt);
-		})
-		this.navHeader.addAction("document","占位",(evt) => {
-			console.log(evt);
-		})
 
 		// const title = this.plugin.path.basename(this.plugin.settings.bookPath);
 		const el = this.contentEl.createDiv()

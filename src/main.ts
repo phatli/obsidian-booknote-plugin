@@ -1167,6 +1167,11 @@ export default class BookNotePlugin extends Plugin {
 		items.length = 0;
 	}
 
+	openCurrentPageBookInBookView() {
+		this.currentBookProjectFile = this.app.workspace.getActiveFile();
+		this.updateBookProject();
+		this.openBookInBookView(this.currentBookProjectBooks[0],true);
+	}
 }
 
 
