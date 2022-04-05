@@ -323,7 +323,7 @@ export class BookView extends ItemView {
 
 							function waitDocumentReady() {
 								if(!self.documentReady) {
-									setTimeout(() => {self.documentReady = true;waitDocumentReady();},100);
+									setTimeout(() => waitDocumentReady(),100);
 								} else {
 									self.currentBook = book;
 									self.currentBookPath = self.plugin.encodeBookPath(book);
